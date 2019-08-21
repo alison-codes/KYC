@@ -1,8 +1,6 @@
 :root {
-  --blue-green: rgb(13, 122, 115);
   --main-text: 'Roboto Condensed', sans-serif;
 }
-
 
 .App {
   text-align: center;
@@ -23,12 +21,22 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  font-family: var(--blue-green);
+  font-family: var( --main-text);
   
+}
+
+h4 {
+  margin: 0px;
 }
 
 button {
   color: white;
+  margin: 10px;
+}
+
+.delete-btn {
+  margin-bottom: 0px;
+
 }
 
 .card-body {

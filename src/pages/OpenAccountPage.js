@@ -8,9 +8,9 @@ export default class OpenAccountPage extends Component {
     render() {
         return (
             <div>
-                <h4>This page might contain the steps to initate the account opening process. It's added here simply to allow for a bit of user flow.</h4>
+                <h5>This page might contain the steps to initate the account opening process. It's added here simply to allow for a bit of user flow.</h5>
                 <Link to='/'>
-                    <button className="waves-effect waves-light btn btn-secondary">Return to previous page</button>
+                    <button className="waves-effect waves-light btn btn-secondary">Search for a new customer</button>
                 </Link>
             </div>
         );

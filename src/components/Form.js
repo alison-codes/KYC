@@ -25,7 +25,12 @@ export default class From extends Component {
     isFormInvalid() {
         //removes dashes from Social Security number
         let numericSocialChars = this.state.social.replace(/-/g, "");
-        return !(this.state.name.length > 3 && this.state.social.length === 11 && isFinite(numericSocialChars));
+        return !(this.state.name.length > 2 && this.state.social.length === 11 && isFinite(numericSocialChars));
+    }
+
+    //allows users to clear form when a character has been entered in either input 
+    isFormBlank() {
+        return !(this.state.name.length || this.state.social.length);
     }
 
     render() {
@@ -33,28 +38,40 @@ export default class From extends Component {
             <div>
                 {this.state.lastCustomerName && (
                     <div className="card">
+                        <div className="right-align">
+                            <button
+                                className="btn delete-btn right-align"
+                                type="button"
+                                onClick={e => {
+                                    e.preventDefault();
+                                    this.setState({
+                                        lastCustomerName: "",
+                                        lastCustomerSocial: "",
+                                    });
+                                }}
+                            >
+                                X
+                                </button>
+                        </div>
+
                         <div className="card-body">
                             <div style={{ color: this.state.riskColor }}>
-                                Customer Profile: {this.state.lastCustomerName}
+                                <h4>Customer Profile <br /> {this.state.lastCustomerName}</h4>
                             </div>
-
                             {this.state.riskColor === 'red' || this.state.riskColor === 'orange' ?
                                 <div className="card-body">
                                     <div className="row">
                                         <div className="text-center summary-text">
-                                            <h5>We advise additional review of this account. Learn more here. TODO insert more info on riskColor.</h5>
-                                            <h6>{this.state.riskIssue}</h6>
+                                            <h6>We advise an additional review of this account as {this.state.riskIssue}.</h6>
                                         </div>
                                     </div>
                                 </div>
                                 : <div className="card-body">
                                     <div className="row">
                                         <div className="text-center summary-text">
-                                            <h5>Based on the information provided, this customer is not on the OFAC list.
-                                            <h2><Link to='/openaccount'>Initiate Account Opening Process</Link></h2>
-
+                                            <h5>Based on the information provided, this customer is not on the OFAC list and has accounts in good standing with Sample Bank.
+                                            <h6><Link to='/openaccount'>Initiate Account Opening Process</Link></h6>
                                             </h5>
-
                                         </div>
                                     </div>
                                 </div>}
@@ -75,6 +92,7 @@ export default class From extends Component {
                                 <input
                                     className="form-control"
                                     type="text"
+                                    maxLength="100"
                                     placeholder="Enter Customer Name"
                                     value={this.state.name}
                                     onChange={e => {
@@ -101,7 +119,7 @@ export default class From extends Component {
                                     }}
                                 />
                                 <button
-                                    className="btn btn-secondary"
+                                    className="btn btn-secondary waves-effect waves-light"
                                     type="button"
                                     disabled={this.isFormInvalid()}
                                     onClick={e => {
@@ -117,25 +135,39 @@ export default class From extends Component {
                                         if (!ofacCheck.passExistingCustomerLookup(this.state.name, this.state.social)) {
                                             this.setState({
                                                 riskColor: "orange",
-                                                riskIssue: "This individual does not have an existing relationship with Sample Bank",
+                                                riskIssue: "this individual does not have an existing relationship with Sample Bank",
                                             });
                                         };
                                         if (!ofacCheck.passSocialLookup(this.state.name, this.state.social)) {
                                             this.setState({
                                                 riskColor: "red",
-                                                riskIssue: "The Social Security Number entered may belong to a different individual",
+                                                riskIssue: "the Social Security Number entered may belong to a different individual",
                                             });
                                         };
                                         if (!ofacCheck.passNameLookup(this.state.name)) {
                                             this.setState({
                                                 riskColor: "red",
-                                                riskIssue: "This individual is on the OFAC blocked persons list",
+                                                riskIssue: "this individual is on the OFAC blocked persons list",
                                             });
                                         };
 
                                     }}
                                 >
-                                    CHECK CUSTOMER
+                                    RETRIEVE CUSTOMER DATA
+                                </button>
+                                <button
+                                    className="btn btn-secondary waves-effect waves-light "
+                                    type="button"
+                                    disabled={this.isFormBlank()}
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        this.setState({
+                                            name: "",
+                                            social: "",
+                                        });
+                                    }}
+                                >
+                                    CLEAR FORM
                                 </button>
                             </div>
                         </form>
