@@ -1,11 +1,11 @@
 /*
-The 3 constants below were adding for demo purposes to represent individuals that may be found in various databases
+The 4 constants below were adding for demo purposes to represent individuals that may be found in various databases
 sdn stands for Specially Designated Nationals. 
 */
 const sdnNameList = ['JOHN SMITH', 'JANE DOE'];
 const socialMatchList = { 'ALISON NORRIS': '123-45-6789', 'MATT LASTNAME': '111-11-1111', 'ROY': '222-22-2222', 'YAN': '333-33-3333', };
 const currentCustomerList = { 'MATT LASTNAME': '111-11-1111', 'ROY': '222-22-2222', };
-
+const sanctionedCountryList = ['Belarus', 'Cuba', 'Democratic Republic of Congo', 'Iran', 'Iraq', 'Liberia', 'North Korea', 'Sudan', 'Syria', 'Zimbabwe',]
 
 //checks the names entered against the list of known high-risk who may be on a blocked persons list; appearance on the list is a red flag 
 function passNameLookup(name) {
@@ -38,8 +38,17 @@ function passExistingCustomerLookup(name, social) {
     return false;
 }
 
+//checks whether the customer maintains any type of citizenship with a sanctioned country
+function passCitizenshipLookup(countryArr) {
+    if (sanctionedCountryList.indexOf(countryArr[0]) !== -1 || sanctionedCountryList.indexOf(countryArr[1]) !== -1 || sanctionedCountryList.indexOf(countryArr[2]) !== -1) {
+        return false;
+    }
+    return true;
+}
+
 export default {
     passNameLookup,
     passSocialLookup,
-    passExistingCustomerLookup
+    passExistingCustomerLookup,
+    passCitizenshipLookup,
 };

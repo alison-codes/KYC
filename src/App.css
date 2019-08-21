@@ -22,7 +22,6 @@
   font-size: calc(10px + 2vmin);
   color: white;
   font-family: var( --main-text);
-  
 }
 
 h4 {
@@ -37,6 +36,10 @@ button {
 .delete-btn {
   margin-bottom: 0px;
 
+}
+
+.placeholder-text {
+  color: gray;
 }
 
 .card-body {

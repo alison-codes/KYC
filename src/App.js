@@ -19,7 +19,6 @@ class App extends Component {
               path="/"
               render={props => (
                 <Form
-                  {...props}
                 />
               )}
             />
