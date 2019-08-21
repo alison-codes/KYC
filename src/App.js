@@ -1,24 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
+import TopNav from "./components/TopNav";
+import Form from "./components/Form";
+import OpenAccountPage from "./components/OpenAccountPage";
+import {Switch, Route,} from "react-router-dom";
+
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <TopNav />
+    <div className="container">
+
+      
+    <Switch>
+
+            <Route
+              exact
+              path="/"
+              render={props => (
+                <Form />
+
+              )}
+            />
+          
+            <Route
+              exact
+              path="/openaccount"
+              render={props => (
+                <OpenAccountPage
+                />
+              )}
+            />
+          </Switch>
+        </div>
     </div>
   );
 }
