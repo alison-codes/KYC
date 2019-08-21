@@ -1,5 +1,5 @@
 :root {
-  --blue-green: rgb(13, 100, 122);
+  --blue-green: rgb(13, 122, 115);
   --main-text: 'Roboto Condensed', sans-serif;
 }
 
@@ -23,12 +23,12 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  font-family: var(--main-text);
+  font-family: var(--blue-green);
   
 }
 
-.App-link {
-  color: #61dafb;
+button {
+  color: white;
 }
 
 .card-body {

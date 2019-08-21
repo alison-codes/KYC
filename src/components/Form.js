@@ -9,20 +9,23 @@ export default class From extends Component {
         // There are three risk categories with associated colors 
         // 1) High-risk is red, 2) Medium-risk is orange, and 3) Low-risk is green
         riskColor: "green",
+        riskIssue: "",
         lastCustomerName: "",
         lastCustomerSocial: "",
     };
 
-    //prevents user from typing in a SSN with more than 9 digits
+    //prevents user from typing in a SSN with more than 11 digits (9 numbers + 2 dashes)
     maxLengthCheck = (e) => {
         if (e.target.value.length > e.target.maxLength) {
             e.target.value = e.target.value.slice(0, e.target.maxLength)
         }
     }
-
-    //requires users to type in required fields in order to select enter button (current name must be at least 4 characters)
+    //requires users pass front-end validation in order to sumbit form
+    //names must contain at least 4 characters; socials must be made of exactly 9 numeric characters
     isFormInvalid() {
-        return !(this.state.name.length > 3 && this.state.social.length === 9);
+        //removes dashes from Social Security number
+        let numericSocialChars = this.state.social.replace(/-/g, "");
+        return !(this.state.name.length > 3 && this.state.social.length === 11 && isFinite(numericSocialChars));
     }
 
     render() {
@@ -40,18 +43,18 @@ export default class From extends Component {
                                     <div className="row">
                                         <div className="text-center summary-text">
                                             <h5>We advise additional review of this account. Learn more here. TODO insert more info on riskColor.</h5>
+                                            <h6>{this.state.riskIssue}</h6>
                                         </div>
                                     </div>
                                 </div>
-
                                 : <div className="card-body">
                                     <div className="row">
                                         <div className="text-center summary-text">
-                                            <h5>Based on the information provided, this customer is not on the OFAC list and the process of opening a new account may occur automatically.
-                                            <h2><Link to='/openaccount'>Start Process</Link></h2>
+                                            <h5>Based on the information provided, this customer is not on the OFAC list.
+                                            <h2><Link to='/openaccount'>Initiate Account Opening Process</Link></h2>
 
                                             </h5>
-                                            
+
                                         </div>
                                     </div>
                                 </div>}
@@ -84,11 +87,14 @@ export default class From extends Component {
                                 <input
                                     className="form-control"
                                     type="text"
-                                    maxLength="9"
+                                    maxLength="11"
                                     placeholder="Enter Customer Social Security Number"
                                     value={this.state.social}
                                     onInput={this.maxLengthCheck}
                                     onChange={e => {
+                                        if (this.state.social.length === 2 || this.state.social.length === 5) {
+                                            e.target.value = e.target.value + '-'
+                                        }
                                         this.setState({
                                             social: e.target.value,
                                         });
@@ -105,12 +111,25 @@ export default class From extends Component {
                                             lastCustomerSocial: this.state.social,
                                             name: "",
                                             social: "",
-                                            riskColor: 'green',
+                                            riskColor: "green",
+                                            riskIssue: "",
                                         });
-
+                                        if (!ofacCheck.passExistingCustomerLookup(this.state.name, this.state.social)) {
+                                            this.setState({
+                                                riskColor: "orange",
+                                                riskIssue: "This individual does not have an existing relationship with Sample Bank",
+                                            });
+                                        };
+                                        if (!ofacCheck.passSocialLookup(this.state.name, this.state.social)) {
+                                            this.setState({
+                                                riskColor: "red",
+                                                riskIssue: "The Social Security Number entered may belong to a different individual",
+                                            });
+                                        };
                                         if (!ofacCheck.passNameLookup(this.state.name)) {
                                             this.setState({
-                                                riskColor: 'red',
+                                                riskColor: "red",
+                                                riskIssue: "This individual is on the OFAC blocked persons list",
                                             });
                                         };
 
